@@ -1,11 +1,11 @@
 from argparse import ArgumentParser
 from video import ClickCapture, wait_for_click
 
+VIDEO_PATH = '/data/side_seing/data/v5/Nantucket-2024-01-13-10-46-43-781/video.mp4'
 
 def main(args):
-    
-    video_path = '/data/side_seing/data/v5/Nantucket-2024-01-13-10-46-43-781/video.mp4'
-    video_iter = ClickCapture(video_path,
+
+    video_iter = ClickCapture(VIDEO_PATH,
                               fps=args.fps)
 
     for frame in video_iter:
