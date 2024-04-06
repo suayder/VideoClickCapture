@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 from video import ClickCapture, wait_for_click
 
-VIDEO_PATH = '/data/side_seing/data/v5/Nantucket-2024-01-13-10-46-43-781/video.mp4'
 
 def main(args):
 
@@ -18,6 +17,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
+    parser.add_argument('--video', required=True, help="path of the video to be watched")
     parser.add_argument('--fps', default=30, type=int, help="fps ratio to show the video")
     parser.add_argument('--force-click', type=int, default=30, help="maximum frames that can elapse without the user click")
 
