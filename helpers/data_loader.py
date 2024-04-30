@@ -2,6 +2,7 @@
 Helpers
 """
 import os
+import cv2
 import pandas as pd
 
 def file_loader(path, ret='dataframe'):
@@ -24,13 +25,14 @@ def file_loader(path, ret='dataframe'):
         all_clicks.append(file.split('.')[:1] + line)
     
     df_clicked = pd.DataFrame(all_clicks, columns=['frame','x','y']).astype(int)
+    df_clicked = df_clicked.set_index('frame')
     df_clicked.sort_values('frame', inplace=True)
 
     assert(ret in ['dataframe', 'dict'])
     if ret == 'dataframe':
         return df_clicked
     else:
-        return df_clicked.set_index('frame').to_dict(orient='index')
+        return df_clicked.to_dict(orient='index')
 
 def multiple_file_loader(path, ret='dataframe'):
     """
@@ -48,4 +50,39 @@ def multiple_file_loader(path, ret='dataframe'):
         df_clicks['user'] = i
         all_clicks.append(df_clicks)
     
-    return pd.concat(all_clicks).set_index(['frame'])
+    return pd.concat(all_clicks)
+
+
+# load video using an interator
+class VideoIterator:
+    def __init__(self, video_path):
+        self.video_path = video_path
+        self.cap = cv2.VideoCapture(video_path)
+
+    def __iter__(self):
+        if not self.cap.isOpened():
+            raise StopIteration
+        return self
+
+    def __next__(self):
+        ret, frame = self.cap.read()
+        if not ret:
+            self.cap.release()
+            raise StopIteration
+        return frame
+    
+    @property
+    def current_frame(self):
+        return int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+    
+    @property
+    def num_frames(self):
+        return int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    @property
+    def width(self):
+        return int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+
+    @property
+    def height(self):
+        return int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
