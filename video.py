@@ -12,21 +12,21 @@ import os
 import cv2
 import numpy as np
 
+from helpers.helpers import Logger, get_username
+
 global paused, clicked
 paused = False
 clicked = False
+logger = Logger().get_logger('video')
 
 def mouse_callback(event, x, y, flags, params):
-
-    path = os.path.join('./runs', params[0].win_name)
-    os.makedirs(path, exist_ok=True)
 
     if event == cv2.EVENT_LBUTTONDOWN:
         global clicked
         clicked = True
 
         current_frame = params[0].current_frame
-        save_at = os.path.join(path,str(current_frame)+'.txt')
+        save_at = os.path.join(params[0].save_dir, str(current_frame)+'.txt')
         with open(save_at, 'w') as frame_file:
             frame_file.write(f'{x}, {y}')
 
@@ -39,8 +39,9 @@ class ClickCapture:
 
     clicked_frames = collections.deque([0])
 
-    def __init__(self, video_path, fps=30):
+    def __init__(self, video_path, save_dir=None, fps=30):
 
+        video_path = os.path.abspath(video_path)
         self.__name = os.path.dirname(video_path).split('/')[-1] # video name without extension
         self.__capture = cv2.VideoCapture(video_path)
         self.__window_config()
@@ -51,6 +52,14 @@ class ClickCapture:
         self.__fps = fps
 
         self.fps_deque = collections.deque(maxlen=fps)
+
+        # config save_dir
+        self.save_dir = os.path.abspath(save_dir) if save_dir else os.path.join(os.path.dirname(video_path), 'annotations_raw', get_username())
+        if os.path.exists(self.save_dir):
+            logger.warning(f'The folder "{self.save_dir}" already exists to save files. If there are files they will be replaced.')
+        else:
+            os.makedirs(self.save_dir, exist_ok=True)
+            logger.info(f'created directory {self.save_dir}')
 
     def __window_config(self):
 
