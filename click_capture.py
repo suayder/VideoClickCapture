@@ -12,7 +12,7 @@ import os
 import cv2
 import numpy as np
 
-from helpers.helpers import Logger, get_username
+from helpers import Logger, get_username
 
 global paused, clicked
 paused = False
@@ -55,9 +55,14 @@ class ClickCapture:
 
         # config save_dir
         self.save_dir = os.path.abspath(save_dir) if save_dir else os.path.join(os.path.dirname(video_path), 'annotations_raw', get_username())
-        if os.path.exists(self.save_dir):
-            logger.warning(f'The folder "{self.save_dir}" already exists to save files. If there are files they will be replaced.')
+        i = 0
+        save_find_dir = self.save_dir
+        while os.path.exists(save_find_dir):
+            i += 1
+            save_find_dir = f'{self.save_dir}_{i}'
+            logger.warning(f'The folder "{self.save_dir}" already exists to save files. Checking for {save_find_dir}.')
         else:
+            self.save_dir = save_find_dir
             os.makedirs(self.save_dir, exist_ok=True)
             logger.info(f'created directory {self.save_dir}')
 

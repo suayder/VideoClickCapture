@@ -1,8 +1,8 @@
 import json
 from os.path import join, dirname
 from argparse import ArgumentParser
-from video import ClickCapture, wait_for_click 
-from helpers.helpers import get_username
+from click_capture import ClickCapture, wait_for_click 
+from helpers import get_username
 
 global EXEC_PARAMS
 EXEC_PARAMS = {}  # is used to store execution parameters

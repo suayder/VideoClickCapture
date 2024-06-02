@@ -1,3 +1,8 @@
+"""
+get_username
+Logger
+"""
+
 import os
 import logging
 
@@ -26,7 +31,6 @@ class Logger:
             ]
         )
         self.logger = logging.getLogger('main_logger')
-
 
     def get_logger(self, logger_name):
         return logging.getLogger(logger_name)
