@@ -17,12 +17,13 @@ from helpers import Logger, get_username
 global paused, clicked
 paused = False
 clicked = False
+
 logger = Logger().get_logger('video')
 
 def mouse_callback(event, x, y, flags, params):
 
-    if event == cv2.EVENT_LBUTTONDOWN:
-        global clicked
+    global clicked
+    if event == cv2.EVENT_LBUTTONUP:
         clicked = True
 
         current_frame = params[0].current_frame
@@ -31,6 +32,9 @@ def mouse_callback(event, x, y, flags, params):
             frame_file.write(f'{x}, {y}')
 
         ClickCapture.clicked_frames.append(current_frame)
+    elif event == cv2.EVENT_RBUTTONUP:
+        clicked = True
+        ClickCapture.rclicks_frames.append(params[0].current_frame)
 
 class ClickCapture:
     """
@@ -38,6 +42,7 @@ class ClickCapture:
     """
 
     clicked_frames = collections.deque([0])
+    rclicks_frames = collections.deque([0])
 
     def __init__(self, video_path, save_dir=None, fps=30):
 
@@ -68,7 +73,7 @@ class ClickCapture:
 
     def __window_config(self):
 
-        cv2.namedWindow(self.__name, cv2.WINDOW_NORMAL)
+        cv2.namedWindow(self.__name, cv2.WINDOW_FULLSCREEN)
         cv2.setWindowProperty(self.__name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.namedWindow(self.__name)
         cv2.setMouseCallback(self.__name, mouse_callback, param=[self])
@@ -102,7 +107,6 @@ class ClickCapture:
                         paused = False
                         break
 
-        
         return frame
 
     def __del__(self):
@@ -125,9 +129,9 @@ class ClickCapture:
         if only_print:
             print(f'{self.__name} - FPS: {np.mean(self.fps_deque):5.2f}')
         else:
-            cv2.imshow(self.__name, frame)
             cv2.setWindowTitle(self.__name, f'{self.__name} - FPS: {np.mean(self.fps_deque):5.2f}')
-            # print fps at each cicle
+            cv2.imshow(self.__name, frame)
+
             total_frames = int(self.__capture.get(cv2.CAP_PROP_FRAME_COUNT))
             if self.current_frame%len(self.fps_deque):
                 print(f'{self.__name} ({(self.current_frame/total_frames)*100:.2f}%) - FPS: {np.mean(self.fps_deque):5.2f}')
@@ -139,6 +143,6 @@ def wait_for_click(cap: ClickCapture):
     clicked = False
 
     while True:
-        cv2.waitKey(1)
+        cv2.waitKey(5)
         if clicked:
             break

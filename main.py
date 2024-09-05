@@ -16,7 +16,9 @@ def main(path, fps, force_click, save_dir):
 
     for frame in video_iter:
         video_iter.show(frame)
-        if (video_iter.current_frame - ClickCapture.clicked_frames[-1]) > force_click:
+        if video_iter.current_frame-1==0: # force clicking on the first frame
+            wait_for_click(video_iter)
+        elif (video_iter.current_frame - ClickCapture.clicked_frames[-1]) > force_click and (video_iter.current_frame - ClickCapture.rclicks_frames[-1] > force_click):
             wait_for_click(video_iter)
 
     print('All clicked frames:', ClickCapture.clicked_frames)
