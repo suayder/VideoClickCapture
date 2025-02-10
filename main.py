@@ -2,12 +2,14 @@ from argparse import ArgumentParser
 from video import ClickCapture, wait_for_click
 
 
-def main(path, fps, force_click, mode, video_name):
+def main(path, fps, force_click, mode, video_name, start_paused):
     video_iter = ClickCapture(path, fps=fps, video_name=video_name)
 
     if mode == 'click':
-        for frame in video_iter:
+        for ind, frame in enumerate(video_iter):
             video_iter.show(frame)
+            if ind == 0 and start_paused:
+                wait_for_click(video_iter)
             if (video_iter.current_frame - ClickCapture.clicked_frames[-1]) > force_click:
                 wait_for_click(video_iter)
     elif mode == 'continuous':
@@ -24,7 +26,8 @@ if __name__ == "__main__":
     parser.add_argument('--video-name', help="name of the video")
     parser.add_argument('--fps', default=30, type=int, help="fps ratio to show the video")
     parser.add_argument('--force-click', type=int, default=30, help="maximum frames that can elapse without require user click")
+    parser.add_argument('--start-paused', help="start the video paused", action='store_true')
 
     args = parser.parse_args()
 
-    main(args.video, args.fps, args.force_click, args.mode, args.video_name)
+    main(args.video, args.fps, args.force_click, args.mode, args.video_name, args.start_paused)
