@@ -15,12 +15,14 @@ def main(path, fps, force_click, save_dir):
     EXEC_PARAMS['force_click'] = force_click
 
     for frame in video_iter:
-        video_iter.show(frame)
-        if video_iter.current_frame-1==0: # force clicking on the first frame
-            wait_for_click(video_iter)
-        elif (video_iter.current_frame - ClickCapture.clicked_frames[-1]) > force_click and (video_iter.current_frame - ClickCapture.rclicks_frames[-1] > force_click):
-            wait_for_click(video_iter)
-
+        if video_iter.current_frame_number-1==0: # force clicking on the first frame
+            wait_for_click(video_iter, frame)
+        elif ((video_iter.current_frame_number - ClickCapture.clicked_frames[-1]) > force_click and 
+             (video_iter.current_frame_number - ClickCapture.rclicks_frames[-1] > force_click)):
+            wait_for_click(video_iter, frame)
+        else:
+            video_iter.show()
+    
     print('All clicked frames:', ClickCapture.clicked_frames)
     print(f'You clicked on {len(ClickCapture.clicked_frames)} frames')
 

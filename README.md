@@ -7,10 +7,9 @@ This repo contains a python script to run a given video and capture where is the
 
 - every time the user click with the mouse a txt file will be saved with a x,y position.
 - The name of the file corresponds to the frame number
-- The files will be saved at `{video_folder}/{video_name}/*.txt` or at `save_dir` argument
+- The files will be saved at `{video_folder}/{video_name}/{username}/*.txt` or at `save_dir` argument
 - By default, every 30 frames the app asks for a click. This can be changed by passing the `--force-click` parameter.
 - The user can choose the fps ratio to pass the video
-- 
 
 
 - **Commands**: 
