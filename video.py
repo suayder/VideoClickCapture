@@ -164,8 +164,8 @@ def mouse_callback(event, x, y, flags, params):
     path = os.path.join('./runs', params[0].win_name)
     os.makedirs(path, exist_ok=True)
 
+    global clicked
     if event == cv2.EVENT_LBUTTONDOWN:
-        global clicked
         clicked = True
 
         current_frame = params[0].current_frame

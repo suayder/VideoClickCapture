@@ -22,8 +22,8 @@ if __name__ == "__main__":
     parser.add_argument('--video', required=True, help="path of the video to be watched")
     parser.add_argument('--mode', default='click', choices=['click', 'continuous'], help="mode of the program")
     parser.add_argument('--video-name', help="name of the video")
-    parser.add_argument('--fps', default=30, type=int, help="fps ratio to show the video")
-    parser.add_argument('--force-click', type=int, default=30, help="maximum frames that can elapse without require user click")
+    parser.add_argument('--fps', default=40, type=int, help="fps ratio to show the video")
+    parser.add_argument('--force-click', type=int, default=60, help="maximum frames that can elapse without require user click")
 
     args = parser.parse_args()
 
