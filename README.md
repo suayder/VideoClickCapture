@@ -3,6 +3,9 @@
 
 This repo contains a python script to run a given video and capture where the user is clicking. Also, it includes a jupyter notebook example to use the data load and display the clicked points.
 
+## DEMO
+
+[![](assets/first_page.png)](https://drive.google.com/file/d/1uu8SYy7bGynw_uUn8AqyvbZ8MrWP1_lE/view?usp=drive_link)
 
 # Quick start
 
